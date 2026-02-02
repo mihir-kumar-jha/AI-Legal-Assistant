@@ -1,7 +1,11 @@
 from langchain_community.document_loaders import PDFPlumberLoader
-from langchain_ollama import OllamaEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 import logging
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Simple text splitter to avoid heavy dependencies
 class SimpleCharacterTextSplitter:
@@ -90,12 +94,10 @@ def create_chunks(documents):
     return text_chunks
 
 
-# #Step 3: Setup Embeddings Model (Use DeepSeek R1 with Ollama)
-ollama_model_name="deepseek-r1:1.5b"
-
-def get_embedding_model(ollama_model_name):
-    logger.info(f"Initializing embeddings with model: {ollama_model_name}")
-    embeddings = OllamaEmbeddings(model=ollama_model_name)
+# #Step 3: Setup Embeddings Model (Use HuggingFace Embeddings)
+def get_embedding_model():
+    logger.info("Initializing HuggingFace embeddings...")
+    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
     logger.info("✓ Embeddings model ready")
     return embeddings
 
@@ -116,9 +118,9 @@ if __name__ == "__main__":
     text_chunks = create_chunks(documents)
     logger.info(f"✓ Created {len(text_chunks)} text chunks")
 
-    logger.info("Setting up Ollama embeddings model...")
+    logger.info("Setting up HuggingFace embeddings model...")
     logger.info("Building embeddings for all chunks (this may take a moment)...")
-    faiss_db=FAISS.from_documents(text_chunks, get_embedding_model(ollama_model_name))
+    faiss_db=FAISS.from_documents(text_chunks, get_embedding_model())
     logger.info(f"✓ FAISS vector store created successfully")
 
     logger.info(f"Saving FAISS database to: {FAISS_DB_PATH}")

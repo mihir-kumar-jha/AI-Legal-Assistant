@@ -31,7 +31,6 @@ Answer:
 """
 
 
-ollama_model_name="deepseek-r1:1.5b"
 FAISS_DB_PATH="vectorstore/db_faiss"
 logger.info(f"FAISS database path: {FAISS_DB_PATH}")
 
@@ -142,7 +141,7 @@ if st.session_state.processing and st.session_state.messages and st.session_stat
     
     # Load existing vector store and get answer
     try:
-        faiss_db = FAISS.load_local(FAISS_DB_PATH, get_embedding_model(ollama_model_name), allow_dangerous_deserialization=True)
+        faiss_db = FAISS.load_local(FAISS_DB_PATH, get_embedding_model(), allow_dangerous_deserialization=True)
         retrieved_docs = retrieve_docs(faiss_db, user_prompt)
 
         if retrieved_docs:
