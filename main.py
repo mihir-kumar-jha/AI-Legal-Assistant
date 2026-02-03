@@ -2,8 +2,6 @@ import streamlit as st
 from dotenv import load_dotenv
 import os
 import logging
-
-from langchain_ollama import OllamaEmbeddings
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.vectorstores import FAISS
 from langchain_groq import ChatGroq
