@@ -105,6 +105,14 @@ def get_embedding_model():
 # #Step 4: Index Documents **Store embeddings in FAISS (vector store)
 FAISS_DB_PATH="vectorstore/db_faiss"
 
+# Load existing FAISS database if available
+try:
+    faiss_db = FAISS.load_local(FAISS_DB_PATH, get_embedding_model(), allow_dangerous_deserialization=True)
+    logger.info("✓ Loaded existing FAISS vector store")
+except Exception as e:
+    logger.warning(f"Could not load existing FAISS database: {e}")
+    faiss_db = None
+
 
 if __name__ == "__main__":
     logger.info("Initializing vector database setup...")
